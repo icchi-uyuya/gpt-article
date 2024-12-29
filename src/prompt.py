@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from typing import overload
 
 LLM_MODEL = "gpt-4o-mini"
+#LLM_MODEL = "gpt-4o-2024-11-20"
 
 # 単一の文字列配列のみを持つ構造
 class StringArray(BaseModel):
@@ -75,9 +76,10 @@ def suggest_outlines(client: OpenAI, *, title: str, keywords: list[str], targets
   res = request(client, system, user, StringArray)
   return res.array
 
-def suggest_subheadings(client: OpenAI, *, heading: str) -> list[str]:
-  system = "入力された要件に合うような、記事の小見出しをいくつか考えてください。"
+def suggest_subheadings(client: OpenAI, *, title: str, heading: str) -> list[str]:
+  system = "入力された小見出しに合うような、さらに内側の見出しの例を10個提案してください。"
   user = f"""
+    タイトル: 「{title}」
     見出し: 「{heading}」
   """
   res = request(client, system, user, StringArray)
@@ -89,11 +91,13 @@ def generate_body(client: OpenAI, *,
     初心者を対象とした親しみやすく助けになる雰囲気で、SEOを意識した記事の本文を書いてください。
     文章は指定されたアウトラインの内容のみ書いてください。
 
+    視点: 記事のライターとして、優しく親しみを得やすい文章を書く。
+
     出力: 
-    - タグはhtmlのようなマークアップ形式で出力してください。
+    - タグはマークアップ形式で出力してください。
     - 段落ごとに「p」タグで区切ってください。
     - 「##」の代わりに「h2」タグを、「###」の代わりに「h3」タグを使用してください。
-    - 重要なキーワードは「strong」タグで囲ってください。
+    - マーカーを引きたいときは「strong」タグで囲ってください。
     """
   sh = "\n".join([f"### {x}" for x in subheading])
   user = f"""
@@ -103,4 +107,9 @@ def generate_body(client: OpenAI, *,
     {sh}
     """
   res = request(client, system, user)
+  return res
+
+def generate_conclusion(client: OpenAI, *, body: str) -> str:
+  system = "入力された文章のクロージングコピーを考案して下さい。"
+  res = request(client, system, body)
   return res
