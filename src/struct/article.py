@@ -1,2 +1,2 @@
 class Article:
-  
+  pass
