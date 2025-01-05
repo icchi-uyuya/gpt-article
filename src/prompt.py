@@ -60,10 +60,11 @@ def suggest_titles(client: OpenAI, *, keywords: list[str], targets: list[str]) -
 
 #検索欄の候補に表示されるようなキーワード候補をタイトルから考案します
 #TODO 数の指定・追加で生成できるようにしたい
-def suggest_seo_keywords(client: OpenAI, *, title: str) -> list[str]:
-  system = "入力されたタイトルに関連するSEOキーワードを10個特定してください。"
-  user = f"記事のタイトル: 「{title}」"
+def suggest_seo_keywords(client: OpenAI, *, keywords: list[str]) -> list[str]:
+  system = "入力された項目に関連するSEOキーワードを30個特定してください。"
+  user = f"キーワード: 「{",".join(keywords)}」"
   res = request(client, system, user, StringArray)
+  #TODO 生成するよりも検索・アナリティクスからも拾えると良い
   return res.array
 
 def suggest_outlines(client: OpenAI, *, title: str, keywords: list[str], targets: list[str]) -> list[str]:
@@ -77,7 +78,7 @@ def suggest_outlines(client: OpenAI, *, title: str, keywords: list[str], targets
   return res.array
 
 def suggest_subheadings(client: OpenAI, *, title: str, heading: str) -> list[str]:
-  system = "入力された小見出しに合うような、さらに内側の見出しの例を10個提案してください。"
+  system = "入力された見出しに合うような、さらに内側の見出しの例を10個提案してください。"
   user = f"""
     タイトル: 「{title}」
     見出し: 「{heading}」

@@ -16,19 +16,23 @@ client = OpenAI(api_key=API_KEY)
 #FIXME 検証のための初期値を削除
 TITLE = "初めての自作PC! 初心者必見のマザーボードの選び方を徹底解説"
 REFER_URL = ["https://www.sofmap.com/contents/?id=nw_ps_select&sid=mb"]
-TARGETS = ["カップル"]
+TARGETS = ["初心者"]
 KEYWORDS = ["自作PC", "マザーボード"]
 
-KEYWORDS = input("キーワードを入力して下さい: ").split(",")
-TARGETS = input("読者のターゲットを入力して下さい: ").split(",")
+KEYWORDS = ["ピンキーリング", "指輪"]
+TARGETS = ["カップル"]
+#TITLE = "シンプル派必見！結婚指輪の選び方と最新トレンド"
+#KEYWORDS = input("キーワードを入力して下さい: ").split(",")
+#TARGETS = input("読者のターゲットを入力して下さい: ").split(",")
 titles = prompt.suggest_titles(client, keywords=KEYWORDS, targets=TARGETS)
 
+#TITLE = input("ttl?")
 for i in range(len(titles)):
   print(f"{i}: {titles[i]}")
 num = int(input("タイトルの番号を入力してください: "))
 TITLE = titles[num]
 
-seo = prompt.suggest_seo_keywords(client, title=TITLE)
+seo = prompt.suggest_seo_keywords(client, keywords=KEYWORDS)
 print(f"関連キーワード: {",".join(seo)}")
 
 res = prompt.suggest_outlines(client, title=TITLE, keywords=KEYWORDS, targets=TARGETS)
