@@ -37,6 +37,17 @@ st.info("""
   プラグインが公開され次第、そちらを利用することを検討してください。
 """, icon="ℹ")
 
+#仮でAPIキーの上書き欄
+def set_api_key():
+  global API_KEY
+  API_KEY = st.session_state["api_input"]
+st.error("文章を生成する前に入力が必要です")
+st.text_input(
+  "OpenAI APIのAPIキーを入力してください", 
+  key='api_input',
+  on_change=set_api_key
+)
+
 #キーワード選定
 keywords = st_tags(
   text="Enterで追加",

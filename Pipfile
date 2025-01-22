@@ -8,6 +8,8 @@ numpy = "*"
 python-dotenv = "*"
 openai = "*"
 pydantic = "*"
+streamlit = "*"
+streamlit-tags = "*"
 
 [dev-packages]
 
